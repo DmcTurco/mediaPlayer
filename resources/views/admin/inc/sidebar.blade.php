@@ -3,7 +3,7 @@
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
-        <a class="navbar-brand m-0" href="{{ route('admin.home') }}">
+        <a class="navbar-brand m-0" href="">
             <img src="{{ asset('assets/img/estudiante.png') }}" class="navbar-brand-img h-100" alt="main_logo">
             <span class="ms-1 font-weight-bold">保育園</span>
         </a>
@@ -13,7 +13,7 @@
         <ul class="navbar-nav">
             {{-- Dashboard --}}
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}" href="{{ route('admin.home') }}">
+                <a class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}" href="">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-tv-2 text-primary text-sm opacity-10"></i>
                     </div>
@@ -23,7 +23,7 @@
 
             {{-- Reservaciones --}}
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.reservations.*') ? 'active' : '' }}" href="{{ route('admin.reservations.index') }}">
+                <a class="nav-link {{ request()->routeIs('admin.reservations.*') ? 'active' : '' }}" href="">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
                     </div>
@@ -33,7 +33,7 @@
 
             {{-- Cuartos --}}
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.rooms.*') ? 'active' : '' }}" href="{{ route('admin.rooms.index') }}">
+                <a class="nav-link {{ request()->routeIs('admin.rooms.*') ? 'active' : '' }}" href="">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-building text-success text-sm opacity-10"></i>
                     </div>
@@ -43,7 +43,7 @@
 
             {{-- Clientes --}}
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}" href="{{ route('admin.clients.index') }}">
+                <a class="nav-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}" href="">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-single-02 text-info text-sm opacity-10"></i>
                     </div>
@@ -53,7 +53,7 @@
 
             {{-- Niños --}}
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.children.*') ? 'active' : '' }}" href="{{ route('admin.children.index') }}">
+                <a class="nav-link {{ request()->routeIs('admin.children.*') ? 'active' : '' }}" href="">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-favourite-28 text-danger text-sm opacity-10"></i>
                     </div>

@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\MyApp;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Request;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +14,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $requestUri = $this->app->request->getRequestUri();
+        Request::macro('routeType', function () use ($requestUri) {
+            if (preg_match("#^/" . MyApp::ADMINS_SUBDIR . "/#", $requestUri)) {
+                return MyApp::ADMINS_SUBDIR;
+            } else {
+                return null;
+            }
+        });
     }
 
     /**
@@ -19,6 +29,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Paginator::useBootstrap();
     }
 }
