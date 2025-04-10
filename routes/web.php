@@ -9,10 +9,11 @@ Route::get('/', function () {
 });
 
 
-Route::prefix(MyApp::ADMINS_SUBDIR)->middleware('auth:admin')->name('name.')->group(function () {
+Route::prefix(MyApp::ADMINS_SUBDIR)->middleware('auth:admin')->name('admin.')->group(function () {
     Route::get('/', function () {
         return redirect()->route('admin.home');
     })->withoutMiddleware('auth:admin');
 
     Route::get('/home', [Admin\AdminController::class, 'index'])->name('home');
+    Route::resource('video', Admin\VideoController::class);
 });
