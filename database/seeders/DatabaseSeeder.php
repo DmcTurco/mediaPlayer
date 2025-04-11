@@ -29,9 +29,15 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Admin User',
                 'email' => 'admin@admin.com',
                 'password' => Hash::make('0000'),
-                // 'remember_token' => Str::random(10),
                 'created_at' => now(),
-                // 'updated_at' => now(),
+            ]
+        ]);
+        DB::table('companies')->insert([
+            [
+                'name' => 'Company User',
+                'email' => 'company@company.com',
+                'password' => Hash::make('0000'),
+                'created_at' => now(),
             ]
         ]);
     }

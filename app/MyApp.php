@@ -5,7 +5,7 @@ class MyApp
 {
     const ADMINS_SUBDIR = 'admin';
 
-    const SUPPLIER_SUBDIR = 'supplier';
+    const COMPANY_SUBDIR = 'company';
 
     const CLIENTS_SUBDIR = 'client';
 }
