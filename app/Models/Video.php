@@ -18,6 +18,7 @@ class Video extends Model
     protected $fillable = [
         'company_id',
         'title',
+        'link',
         'description',
         'file_path',
         'thumbnail_path',

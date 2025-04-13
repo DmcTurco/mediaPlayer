@@ -3,7 +3,7 @@
 
 @section('title', 'Videos')
 @section('content-area')
-@include('company.pages.video.form')
+    @include('company.pages.video.form')
     <div class="container-fluid py-2">
         <div class="row">
             <div class="col-12">
@@ -49,6 +49,10 @@
                                         </th>
                                         <th
                                             class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                            Link
+                                        </th>
+                                        <th
+                                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                             Vistas
                                         </th>
                                         <th
@@ -87,6 +91,11 @@
                                             </td>
                                             <td>
                                                 <p class="text-xs text-secondary mb-0">
+                                                    {{ $video->link }}
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs text-secondary mb-0">
                                                     <i class="fas fa-eye text-info me-1"></i> {{ $video->views }}
                                                 </p>
                                             </td>
@@ -102,16 +111,13 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex">
-                                                    <a href=""
-                                                        class="btn btn-link text-primary btn-sm p-1">
+                                                    <a href="" class="btn btn-link text-primary btn-sm p-1">
                                                         <i class="fas fa-edit text-primary"></i>
                                                     </a>
-                                                    <a href=""
-                                                        class="btn btn-link text-info btn-sm p-1">
+                                                    <a href="" class="btn btn-link text-info btn-sm p-1">
                                                         <i class="fas fa-play-circle text-info"></i>
                                                     </a>
-                                                    <form action=""
-                                                        method="POST" class="d-inline">
+                                                    <form action="" method="POST" class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-link text-danger btn-sm p-1"

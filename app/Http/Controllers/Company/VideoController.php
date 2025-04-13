@@ -55,14 +55,15 @@ class VideoController extends Controller
             // Definir reglas de validación
             $rules = [
                 'title' => 'required|string|max:255',
-                'description' => 'required|string',
+                'link' => 'nullable|url',
+                'description' => 'nullable|string',
                 'video_file' => 'required|file|mimetypes:video/mp4,video/quicktime,video/x-msvideo|max:102400', // 100MB
             ];
 
             // Mensajes personalizados
             $messages = [
                 'title.required' => 'El título del video es obligatorio',
-                'description.required' => 'La descripción del video es obligatoria',
+                // 'description.required' => 'La descripción del video es obligatoria',
                 'video_file.required' => 'Debes seleccionar un archivo de video',
                 'video_file.file' => 'El archivo seleccionado no es válido',
                 'video_file.mimetypes' => 'El formato del video debe ser MP4, MOV o AVI',
@@ -150,6 +151,7 @@ class VideoController extends Controller
             $video = new Video();
             $video->company_id = auth()->id();
             $video->title = $validated['title'];
+            $video->link = $validated['link'];
             $video->description = $validated['description'];
             $video->file_path = $videoDbPath;
             $video->thumbnail_path = $thumbnailDbPath;

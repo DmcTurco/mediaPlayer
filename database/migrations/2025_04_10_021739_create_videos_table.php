@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id');
-            $table->text('title');
-            $table->text('description');
+            $table->string('title');
+            $table->string('link')->nullable();
+            $table->text('description')->nullable();
             $table->string('file_path');
             $table->string('thumbnail_path')->nullable();
             $table->integer('views')->default(0);

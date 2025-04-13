@@ -23,8 +23,13 @@
                             </div>
 
                             <div class="form-group mb-3">
-                                <label for="description" class="form-control-label">Descripción <span
-                                        class="text-danger">*</span></label>
+                                <label for="link" class="form-control-label">Link</label>
+                                <input class="form-control" type="text" id="link" name="link" required>
+                                <div class="invalid-feedback" id="linkFeedback"></div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="description" class="form-control-label">Descripción</label>
                                 <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
                                 <div class="invalid-feedback" id="descriptionFeedback"></div>
                             </div>
@@ -140,6 +145,7 @@
             form: document.getElementById('videoUploadForm'),
             videoInput: document.getElementById('video_file'),
             title: document.getElementById('title'),
+            link: document.getElementById('link'),
             description: document.getElementById('description'),
             browseBtn: document.getElementById('browseButton'),
             publishBtn: document.getElementById('publishVideoBtn'),

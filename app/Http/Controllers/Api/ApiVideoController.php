@@ -30,6 +30,7 @@ class ApiVideoController extends Controller
             return [
                 'id' => $video->id,
                 'title' => $video->title,
+                'link' => $video->link,
                 'description' => $video->description,
                 'thumbnail_url' => $video->thumbnailUrl,
                 'video_url' => $video->videoUrl,
