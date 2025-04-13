@@ -3,7 +3,7 @@
 
 @include('company/inc/head')
 
-<body class="g-sidenav-show   bg-gray-300">
+<body class="g-sidenav-show   bg-gray-100">
     <div class="min-height-300 bg-secondary position-absolute w-100"></div>
 
     @include('company/inc/navbar')

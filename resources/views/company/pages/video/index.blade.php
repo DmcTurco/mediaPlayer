@@ -1,5 +1,5 @@
 {{-- resources/views/admin/pages/videos/index.blade.php --}}
-@extends('admin/layouts/base')
+@extends('company/layouts/base')
 
 @section('title', 'Videos')
 @section('content-area')
@@ -75,8 +75,7 @@
                                                         <a href="">
                                                             <img src="{{ $video->thumbnailUrl }}"
                                                                 class="w-100 h-100 object-fit-cover"
-                                                                alt="{{ $video->title }}"
-                                                                onerror="this.onerror=null; this.src='{{ asset('img/default-video-thumbnail.jpg') }}'">
+                                                                alt="{{ $video->title }}">
                                                         </a>
                                                     </div>
                                                 </div>

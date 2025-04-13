@@ -16,9 +16,11 @@ class Video extends Model
      * @var array
      */
     protected $fillable = [
+        'company_id',
         'title',
         'description',
         'file_path',
+        'thumbnail_path',
         'views',
         'likes'
     ];
@@ -53,16 +55,24 @@ class Video extends Model
      */
     public function getThumbnailUrlAttribute()
     {
-        // Verificar si existe una miniatura generada
+        // Primero verificar si tenemos una ruta de thumbnail guardada en la base de datos
+        if (!empty($this->thumbnail_path)) {
+            // Verificar si el archivo realmente existe
+            if (file_exists(storage_path('app/' . $this->thumbnail_path))) {
+                return asset('storage/' . str_replace('public/', '', $this->thumbnail_path));
+            }
+        }
+
+        // Método de fallback: construir la ruta basada en el nombre del archivo de video
         $thumbnailPath = pathinfo($this->file_path, PATHINFO_DIRNAME) . '/thumbnails/' .
-                        pathinfo($this->file_path, PATHINFO_FILENAME) . '.jpg';
+            pathinfo($this->file_path, PATHINFO_FILENAME) . '.jpg';
 
         if (file_exists(storage_path('app/public/' . $thumbnailPath))) {
             return asset('storage/' . $thumbnailPath);
         }
 
         // Si no hay miniatura, devolver una imagen por defecto
-        return asset('img/default-video-thumbnail.jpg');
+        return asset('assets/img/default.jpg');
     }
 
     /**
@@ -106,7 +116,7 @@ class Video extends Model
     public function getRelatedVideos($limit = 4)
     {
         $titleWords = collect(explode(' ', $this->title))
-            ->filter(function($word) {
+            ->filter(function ($word) {
                 return strlen($word) > 3; // Filtrar palabras cortas
             });
 
@@ -119,7 +129,7 @@ class Video extends Model
         }
 
         return self::where('id', '!=', $this->id)
-            ->where(function($query) use ($titleWords) {
+            ->where(function ($query) use ($titleWords) {
                 foreach ($titleWords as $word) {
                     $query->orWhere('title', 'like', "%{$word}%");
                 }

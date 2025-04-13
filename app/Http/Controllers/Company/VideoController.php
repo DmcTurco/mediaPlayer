@@ -8,7 +8,10 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use FFMpeg\FFMpeg;
+use FFMpeg\Coordinate\TimeCode;
 
 class VideoController extends Controller
 {
@@ -40,35 +43,118 @@ class VideoController extends Controller
     /**
      * Guardar un nuevo video
      */
+    /**
+     * Almacenar un nuevo video
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
         try {
-            // Validar la solicitud
-            $validated = $request->validate([
+            // Definir reglas de validación
+            $rules = [
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
                 'video_file' => 'required|file|mimetypes:video/mp4,video/quicktime,video/x-msvideo|max:102400', // 100MB
-            ]);
+            ];
+
+            // Mensajes personalizados
+            $messages = [
+                'title.required' => 'El título del video es obligatorio',
+                'description.required' => 'La descripción del video es obligatoria',
+                'video_file.required' => 'Debes seleccionar un archivo de video',
+                'video_file.file' => 'El archivo seleccionado no es válido',
+                'video_file.mimetypes' => 'El formato del video debe ser MP4, MOV o AVI',
+                'video_file.max' => 'El tamaño máximo permitido es 100MB',
+            ];
+
+            // Validar request
+            $validator = Validator::make($request->all(), $rules, $messages);
+
+            // Si la validación falla
+            if ($validator->fails()) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Error de validación',
+                        'errors' => $validator->errors()
+                    ], 422);
+                }
+
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            // Obtener datos validados
+            $validated = $validator->validated();
 
             // Crear directorio si no existe
             $videoPath = "videos/" . date('Y/m');
 
-            if (!Storage::exists("public/{$videoPath}")) {
-                Storage::makeDirectory("public/{$videoPath}");
+            if (!Storage::exists("{$videoPath}")) {
+                Storage::makeDirectory("{$videoPath}");
             }
 
             // Procesar y guardar el video
             $videoFile = $request->file('video_file');
-            $videoFileName = Str::slug($request->title) . '-' . time() . '.' . $videoFile->getClientOriginalExtension();
-            $videoFullPath = $videoFile->storeAs("public/{$videoPath}", $videoFileName);
-            $videoDbPath = str_replace('public/', '', $videoFullPath);
+            $videoFileName = Str::slug($validated['title']) . '-' . time() . '.' . $videoFile->getClientOriginalExtension();
+            $videoFullPath = $videoFile->storeAs("{$videoPath}", $videoFileName);
+            $videoDbPath = $videoFullPath;
+
+            // Crear directorio para thumbnails si no existe
+            $thumbnailPath = $videoPath . '/thumbnails';
+            if (!Storage::exists($thumbnailPath)) {
+                Storage::makeDirectory($thumbnailPath);
+            }
+
+            // Obtener rutas para procesamiento
+            $videoStoragePath = Storage::path($videoFullPath);
+            $thumbnailFileName = pathinfo($videoFileName, PATHINFO_FILENAME) . '.jpg';
+            $thumbnailStoragePath = Storage::path($thumbnailPath . '/' . $thumbnailFileName);
+            $thumbnailDbPath = $thumbnailPath . '/' . $thumbnailFileName;
+
+            // Generar thumbnail con php-ffmpeg
+            try {
+                // Configurar FFMpeg con la ruta a los binarios incluidos en el proyecto
+                $ffmpeg = FFMpeg::create([
+                    'ffmpeg.binaries' => base_path('bin/ffmpeg/ffmpeg.exe'),
+                    'ffprobe.binaries' => base_path('bin/ffmpeg/ffprobe.exe'),
+                    'timeout' => 3600, // Tiempo máximo para procesar (en segundos)
+                    'ffmpeg.threads' => 12, // Cantidad de hilos a usar
+                ]);
+
+                // Abrir el video
+                $video_object = $ffmpeg->open($videoStoragePath);
+
+                // Extraer un frame específico (a los 3 segundos)
+                $frame = $video_object->frame(TimeCode::fromSeconds(3));
+
+                // Guardar el frame como imagen JPG
+                $frame->save($thumbnailStoragePath);
+
+                // Registrar éxito
+                Log::info('Thumbnail generado correctamente en: ' . $thumbnailStoragePath);
+            } catch (\FFMpeg\Exception\ExecutableNotFoundException $e) {
+                // Si no encuentra el ejecutable de FFmpeg
+                Log::error('FFmpeg no encontrado: ' . $e->getMessage());
+                $thumbnailDbPath = null;
+            } catch (\Exception $e) {
+                // Otros errores
+                Log::error('Error al generar thumbnail con FFMpeg: ' . $e->getMessage());
+                $thumbnailDbPath = null;
+            }
 
             // Crear registro en base de datos
             $video = new Video();
-            $video->title = $request->title;
-            $video->description = $request->description;
+            $video->company_id = auth()->id();
+            $video->title = $validated['title'];
+            $video->description = $validated['description'];
             $video->file_path = $videoDbPath;
+            $video->thumbnail_path = $thumbnailDbPath;
             $video->save();
+
 
             // Si la solicitud es AJAX, devolver respuesta JSON
             if ($request->ajax() || $request->wantsJson()) {

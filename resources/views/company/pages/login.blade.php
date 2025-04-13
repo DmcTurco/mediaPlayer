@@ -48,7 +48,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <input type="password" class="form-control form-control-lg" name="password"
-                                                placeholder="Password" aria-label="Password">
+                                                placeholder="Password" aria-label="Password" autocomplete="off">
                                         </div>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" id="rememberMe">

@@ -11,17 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('videos', function (Blueprint $table) {
+        Schema::create('video_views', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('company_id');
-            $table->text('title');
-            $table->text('description');
-            $table->string('file_path');
-            $table->string('thumbnail_path')->nullable();
-            $table->integer('views')->default(0);
-            $table->integer('likes')->default(0);
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('video_id');
+            $table->timestamp('viewed_at')->useCurrent();
             $table->timestamps();
             $table->softDeletes();
+            
         });
     }
 
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('videos');
+        Schema::dropIfExists('video_views');
     }
 };

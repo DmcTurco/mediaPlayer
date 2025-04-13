@@ -25,7 +25,7 @@ class ApiClientController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'tecnico' => $user,
+            'Cliente' => $user,
             'token' => $token,
             'token_type' => 'Bearer'
         ]);
